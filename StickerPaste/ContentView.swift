@@ -14,6 +14,8 @@ struct ContentView: View {
     private func pasteImage() {
         if let image = UIPasteboard.general.image {
             stickers.append(image)
+        } else {
+            stickers.append(UIImage(systemName: "questionmark")!)
         }
     }
     
@@ -61,37 +63,49 @@ struct StickerView: View {
     
     @State var scale: CGFloat = 1.0
     
+    @State var angle = Angle(degrees: 0.0)
+    
     init(sticker: UIImage) {
         self.sticker = sticker
     }
     
+    var rotationGesture: some Gesture {
+        RotationGesture()
+            .onChanged { angle in
+                self.angle = angle
+            }
+    }
+    
+    var magnificationGesture: some Gesture {
+        MagnificationGesture()
+            .onChanged { scale in
+                print("zoom")
+                self.scale = scale
+            }
+    }
+    
+    var dragGesture: some Gesture {
+        DragGesture()
+            .onChanged({ (gesture) in
+                print("drag")
+                self.position = gesture.location
+            })
+    }
+    
     var body: some View {
-        Image(uiImage: sticker)
-//        Rectangle()
-            .resizable()
-            .position(position)
-            .frame(alignment: .center)
-            .hoverEffect()
-        
-            .onTapGesture(coordinateSpace: .global) { location in
-                    print("Tapped at \(location)")
-                }
-            .gesture(
-                DragGesture()
-                    .onChanged({ (gesture) in
-                        position = gesture.location
-                    })
-//                    .onEnded({ (gesture) in
-//                        position = gesture.location
-//                    })
-            )
-           .scaleEffect(scale)
-           .frame(width: 100, height: 100)
-           .gesture(MagnificationGesture()
-               .onChanged { value in
-                   self.scale = value.magnitude
-               }
-           )
+            Image(uiImage: sticker)
+                .resizable()
+                .position(position)
+                .frame(alignment: .center)
+                .hoverEffect()
+                .rotationEffect(self.angle)
+                .scaleEffect(scale)
+                .frame(width: 100, height: 100)
+                .gesture(
+                    dragGesture
+                    .simultaneously(with: rotationGesture)
+                    .simultaneously(with: magnificationGesture)
+                )
     }
 }
 

@@ -10,6 +10,7 @@ import SwiftUI
 struct ContentView: View {
     
     @State private var stickers : [UIImage] = []
+//    @State private var stickerZ: [Int]
     
     private func pasteImage() {
         if let image = UIPasteboard.general.image {
@@ -34,6 +35,7 @@ struct ContentView: View {
                 ZStack {
                     ForEach(stickers, id: \.self) {sticker in
                         StickerView(sticker: sticker)
+//                            .zIndex(<#T##value: Double##Double#>)
                     }
                 }
                 
@@ -61,12 +63,15 @@ struct StickerView: View {
     
     private var sticker: UIImage
     
-    @State var scale: CGFloat = 1.0
+    @State var scale: CGFloat = 1
     
     @State var angle = Angle(degrees: 0.0)
     
+    @State var zindex = 1
+    
     init(sticker: UIImage) {
         self.sticker = sticker
+        self.scale = sticker.scale
     }
     
     var rotationGesture: some Gesture {
@@ -100,7 +105,7 @@ struct StickerView: View {
                 .hoverEffect()
                 .rotationEffect(self.angle)
                 .scaleEffect(scale)
-                .frame(width: 100, height: 100)
+                .frame(width: sticker.size.width/5, height: sticker.size.height/5)
                 .gesture(
                     dragGesture
                     .simultaneously(with: rotationGesture)

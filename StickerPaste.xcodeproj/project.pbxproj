@@ -11,6 +11,7 @@
 		A27213A128DF57580001024E /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A27213A028DF57580001024E /* ContentView.swift */; };
 		A27213A328DF575A0001024E /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A27213A228DF575A0001024E /* Assets.xcassets */; };
 		A27213A628DF575A0001024E /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A27213A528DF575A0001024E /* Preview Assets.xcassets */; };
+		A2AC7FB228E0C2A000C0300C /* SampleGestureView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2AC7FB128E0C29F00C0300C /* SampleGestureView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -19,6 +20,7 @@
 		A27213A028DF57580001024E /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		A27213A228DF575A0001024E /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		A27213A528DF575A0001024E /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
+		A2AC7FB128E0C29F00C0300C /* SampleGestureView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SampleGestureView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -53,6 +55,7 @@
 			children = (
 				A272139E28DF57580001024E /* StickerPasteApp.swift */,
 				A27213A028DF57580001024E /* ContentView.swift */,
+				A2AC7FB128E0C29F00C0300C /* SampleGestureView.swift */,
 				A27213A228DF575A0001024E /* Assets.xcassets */,
 				A27213A428DF575A0001024E /* Preview Content */,
 			);
@@ -137,6 +140,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A2AC7FB228E0C2A000C0300C /* SampleGestureView.swift in Sources */,
 				A27213A128DF57580001024E /* ContentView.swift in Sources */,
 				A272139F28DF57580001024E /* StickerPasteApp.swift in Sources */,
 			);

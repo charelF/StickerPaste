@@ -16,7 +16,6 @@ struct SampleGestureView: View {
     @State var previousPosition: CGPoint = CGPoint(x: 0, y: 0)
     @State var newPosition: CGPoint = CGPoint(x: 0, y: 0)
     @State var positionDifference: CGPoint = CGPoint(x: 0, y: 0)
-    @State var positionMovement: CGPoint = CGPoint(x: 0, y: 0)
     
     var magnificationGesture: some Gesture {
         MagnificationGesture()
@@ -41,15 +40,17 @@ struct SampleGestureView: View {
     var dragGesture: some Gesture {
         DragGesture()
             .onChanged { value in
-                positionMovement.x = value.startLocation.x - value.location.x
-                positionMovement.y = value.startLocation.y - value.location.y
-                newPosition.x = previousPosition.x - positionMovement.x
-                newPosition.y = previousPosition.y - positionMovement.y
+                positionDifference.x = value.startLocation.x - value.location.x
+                positionDifference.y = value.startLocation.y - value.location.y
+                newPosition.x = previousPosition.x - positionDifference.x
+                newPosition.y = previousPosition.y - positionDifference.y
             }
             .onEnded { value in
                 previousPosition = newPosition
             }
     }
+    
+    
     
     var body: some View {
         VStack {
@@ -69,6 +70,7 @@ struct SampleGestureView: View {
                 )
             Spacer()
         }
+        .background(Color.blue)
     }
 }
 

@@ -7,7 +7,15 @@
 
 import SwiftUI
 
-struct StickerView: View {
+struct StickerView: View, Hashable, Equatable {
+    
+    static func == (lhs: StickerView, rhs: StickerView) -> Bool {
+        return lhs.id == rhs.id
+    }
+    
+    public func hash(into hasher: inout Hasher) {
+        return hasher.combine(id)
+    }
     
     @State var previousScale: CGFloat = 1
     @State var newScale: CGFloat = 1
@@ -50,21 +58,18 @@ struct StickerView: View {
             }
     }
     
-    var deleteSticker: (UUID) -> Void
-//    var moveSticker: (zPosition: ZPosition) -> Void
-    
+    var deleteSticker: (StickerView) -> Void
     var sticker: UIImage
-
     var width: CGFloat
     var height: CGFloat
+    var id: UUID
     
-    var id: UUID = UUID()
-    
-    init(deleteSticker: @escaping (UUID) -> Void, sticker: UIImage) {
+    init(deleteSticker: @escaping (StickerView) -> Void, sticker: UIImage, id: UUID) {
         self.sticker = sticker
         self.width = sticker.size.width
         self.height = sticker.size.width
         self.deleteSticker = deleteSticker
+        self.id = id
     }
     
     
@@ -76,9 +81,7 @@ struct StickerView: View {
                 .resizable()
                 
         }
-        .frame(width: self.width, height: self.height, alignment: .center)
-        
-            
+            .frame(width: self.width, height: self.height, alignment: .center)
             .rotationEffect(newAngle)  // needs to be before scaleEffect
             .scaleEffect(newScale)
             .position(newPosition)
@@ -89,14 +92,14 @@ struct StickerView: View {
             )
             .contextMenu {
                 Button {
-                    deleteSticker(id)
+                    deleteSticker(self)
                 } label: {
                     Label("Delete Sticker", systemImage: "trash")
                 }
                 Button {
 //                    moveSticker()
                 } label: {
-                    Label("Delete Sticker", systemImage: "trash")
+                    Label("Move Sticker", systemImage: "trash")
                 }
             }
         
@@ -112,6 +115,6 @@ enum ZPosition {
 
 struct StickerView_Previews: PreviewProvider {
     static var previews: some View {
-        StickerView(deleteSticker: {_ in ()}, sticker: UIImage(systemName: "questionmark")!)
+        StickerView(deleteSticker: {_ in ()}, sticker: UIImage(systemName: "questionmark")!, id: UUID())
     }
 }

@@ -9,41 +9,49 @@ import SwiftUI
 
 struct ContentView: View {
     
-    @State private var stickers : [UIImage] = []
-    @State private var backgroundColor: Color = Color.white
+    @State var backgroundColor: Color = Color.white
+    @State var stickerViews: [StickerView] = []
     
     func pasteSticker() {
-        if let image = UIPasteboard.general.image {
-            stickers.append(image)
-        } else {
-            stickers.append(UIImage(systemName: "questionmark")!)
+        let image = UIPasteboard.general.image ?? UIImage(named: "BaseImage") ?? UIImage(systemName: "questionmark")!
+        let id = UUID()
+        let stickerView = StickerView(deleteSticker: deleteSticker, sticker: image, id: id)
+        stickerViews.append(stickerView)
+    }
+    
+    func deleteSticker(_ stickerView: StickerView) {
+        if let index = stickerViews.firstIndex(of: stickerView) {
+            stickerViews.remove(at: index)
         }
     }
     
     func clearCollage() {
-        stickers = []
+        stickerViews = []
     }
     
     func saveCollage() {
-        let image = collageView.snapshot(viewSize: viewSize)
+        let controller = UIHostingController(rootView: collageView)
+        let view = controller.view
+        view?.backgroundColor = .clear
+        let renderer = UIGraphicsImageRenderer(size: viewSize)
+//        view?.bounds = CGRect(origin: .zero, size: viewSize)
+        view?.bounds = CGRect(x: viewSize.width/2, y: viewSize.height/2, width: viewSize.width, height: viewSize.height)
+//        view?.boudns = CGRect(origin: ., size: <#T##CGSize#>)
+        var image = renderer.image { _ in
+//            view?.snapshotView(afterScreenUpdates: true)
+            view?.drawHierarchy(in: controller.view.bounds, afterScreenUpdates: true)
+        }
         UIImageWriteToSavedPhotosAlbum(image, nil, nil, nil)
     }
     
-    func deleteSticker(_ id: UUID) {
-        //        for i in 0..<stickers.count {
-        //            if stickers[i].id == id {
-        //                stickers.remove(at: i)
-        //                break
-        //            }
-        //        }
-    }
+    
     
     var mainMenu: some View {
         Group {
             Button {
                 pasteSticker()
             } label: {
-                Label("Paste Sticker", systemImage: "photo")
+                Label("Paste Sticker", systemImage: "doc.on.clipboard")
             }
             Button {
                 clearCollage()
@@ -73,14 +81,18 @@ struct ContentView: View {
     var collageView: some View {
         ZStack {
             backgroundColor.edgesIgnoringSafeArea(.all)
-            ForEach(stickers, id: \.self) { sticker in
-                StickerView(deleteSticker: deleteSticker, sticker: sticker)
+            ForEach(stickerViews, id: \.self) { stickerView in
+                stickerView
+            }
+            GeometryReader { geo in
+                
             }
         }
-        .readSize { newSize in
-          print("The new child size is: \(newSize)")
-            viewSize = newSize
-        }
+//        .readSize { newSize in
+//          print("The new child size is: \(newSize)")
+//            viewSize = newSize
+//        }
+        .coordinateSpace(name: "collageCoordinateSpace")
     }
     
     var body: some View {
@@ -102,26 +114,6 @@ struct ContentView: View {
     }
 }
 
-extension View {
-    // https://www.hackingwithswift.com/quick-start/swiftui/how-to-convert-a-swiftui-view-to-an-image
-    func snapshot(viewSize: CGSize) -> UIImage {
-        let controller = UIHostingController(rootView: self)
-        let view = controller.view
-
-//        let targetSize = controller.view.intrinsicContentSize
-        view?.bounds = CGRect(origin: .zero, size: viewSize)
-//        view?.backgroundColor = .clear
-        
-        let targetSize = viewSize
-
-        let renderer = UIGraphicsImageRenderer(size: targetSize)
-
-        return renderer.image { _ in
-            view?.drawHierarchy(in: controller.view.bounds, afterScreenUpdates: true)
-        }
-    }
-}
-
 struct SizePreferenceKey: PreferenceKey {
     static var defaultValue: CGSize = .zero
     static func reduce(value: inout CGSize, nextValue: () -> CGSize) {}
@@ -133,6 +125,7 @@ extension View {
       GeometryReader { geometryProxy in
         Color.clear
           .preference(key: SizePreferenceKey.self, value: geometryProxy.size)
+//          geometryProxy.origin
       }
     )
     .onPreferenceChange(SizePreferenceKey.self, perform: onChange)

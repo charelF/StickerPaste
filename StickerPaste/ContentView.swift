@@ -14,8 +14,7 @@ struct ContentView: View {
     
     func pasteSticker() {
         let image = UIPasteboard.general.image ?? UIImage(named: "BaseImage") ?? UIImage(systemName: "questionmark")!
-        let id = UUID()
-        let stickerView = StickerView(deleteSticker: deleteSticker, sticker: image, id: id)
+        let stickerView = StickerView(deleteSticker: deleteSticker, moveSticker: moveSticker, sticker: image)
         stickerViews.append(stickerView)
     }
     
@@ -27,6 +26,39 @@ struct ContentView: View {
     
     func clearCollage() {
         stickerViews = []
+    }
+    
+    func moveSticker(_ stickerView: StickerView, to zIndexMove: ZIndexMove) {
+    }
+//        stickerView.zIndex += 1
+        
+//        print("stickerview argument \(stickerView.zIndex)")
+        
+//        if let index = stickerViews.firstIndex(of: stickerView) {
+////            print("stickerviews index \(stickerViews[index].zIndex)")
+//            stickerViews[index].zIndex += 1
+////            print("stickerviews index after \(stickerViews[index].zIndex)")
+//
+//            var sV = stickerViews[index]
+//            sV.zIndex += 1
+//            stickerViews[index] = sV
+//
+//            print(sV.zIndex)
+//        }
+//
+////        findElements(for: stickerView, in: stickerViews)
+//
+//        for sv in stickerViews {
+//            print("sv index \(sv.zIndex)")
+//        }
+//
+//    }
+    
+    
+    private func findElements(for tsv: StickerView, in svs: [StickerView]) {
+        for sv in svs.sorted(by: {sv1, sv2 in return sv1.zIndex > sv2.zIndex}) {
+            print(sv.zIndex)
+        }
     }
     
     func saveCollage() {
@@ -64,7 +96,7 @@ struct ContentView: View {
                 Label("Save Collage", systemImage: "square.and.arrow.down.on.square")
             }
             Menu("Background Color") {
-                Picker(selection: $backgroundColor, label: Text("Background Color")) {
+                Picker(selection: $backgroundColor, label: Label("Background Color", systemImage: "photo")) {
                     Text("White").tag(Color.white)
                     Text("Black").tag(Color.black)
                     Text("Red").tag(Color.red)
@@ -103,7 +135,9 @@ struct ContentView: View {
                     Menu(content: {
                         mainMenu
                     }, label: {
-                        Label("Add", systemImage: "plus").foregroundColor(Color.black)
+                        ZStack {
+                            Label("Add", systemImage: "plus.circle").foregroundColor((backgroundColor == Color.black) ? Color.white : Color.black)
+                        }
                     })
                 }
             }

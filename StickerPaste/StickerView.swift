@@ -59,54 +59,65 @@ struct StickerView: View, Hashable, Equatable {
     }
     
     var deleteSticker: (StickerView) -> Void
+    var moveSticker: (StickerView, ZIndexMove) -> Void
     var sticker: UIImage
     var width: CGFloat
     var height: CGFloat
     var id: UUID
+    @State var zIndex: Double = 0
     
-    init(deleteSticker: @escaping (StickerView) -> Void, sticker: UIImage, id: UUID) {
+    init(deleteSticker: @escaping (StickerView) -> Void, moveSticker: @escaping (StickerView, ZIndexMove) -> Void, sticker: UIImage) {
         self.sticker = sticker
         self.width = sticker.size.width
         self.height = sticker.size.width
         self.deleteSticker = deleteSticker
-        self.id = id
+        self.moveSticker = moveSticker
+        self.id = UUID()
     }
     
+    var mainMenu: some View {
+        Group {
+            Button {
+                deleteSticker(self)
+            } label: {
+                Label("Delete Sticker", systemImage: "trash")
+            }
+            Button {
+                self.zIndex += 1
+            } label: {
+                Label("Move Sticker Up", systemImage: "arrow.up")
+            }
+            Button {
+                self.zIndex = max(self.zIndex - 1, 0)
+            } label: {
+                Label("Move Sticker Down", systemImage: "arrow.down")
+            }
+        }
+    }
     
     var body: some View {
         ZStack {
             Rectangle()
-                .fill(Color.red.opacity(0))
+                .fill(Color.clear)
             Image(uiImage: sticker)
                 .resizable()
-                
+            Text("\(zIndex)").foregroundColor(Color.red)
         }
-            .frame(width: self.width, height: self.height, alignment: .center)
-            .rotationEffect(newAngle)  // needs to be before scaleEffect
-            .scaleEffect(newScale)
-            .position(newPosition)
-            .gesture(
-                rotationGesture
-                    .simultaneously(with: magnificationGesture)
-                    .simultaneously(with: dragGesture)
-            )
-            .contextMenu {
-                Button {
-                    deleteSticker(self)
-                } label: {
-                    Label("Delete Sticker", systemImage: "trash")
-                }
-                Button {
-//                    moveSticker()
-                } label: {
-                    Label("Move Sticker", systemImage: "trash")
-                }
-            }
-        
+        .frame(width: self.width, height: self.height, alignment: .center)
+        .rotationEffect(newAngle)  // needs to be before scaleEffect
+        .scaleEffect(newScale)
+        .position(newPosition)
+        .gesture(
+            rotationGesture
+                .simultaneously(with: magnificationGesture)
+                .simultaneously(with: dragGesture)
+        )
+        .zIndex(zIndex)
+        .contextMenu { mainMenu }
     }
 }
 
-enum ZPosition {
+enum ZIndexMove {
     case backward
     case forward
     case back
@@ -115,6 +126,6 @@ enum ZPosition {
 
 struct StickerView_Previews: PreviewProvider {
     static var previews: some View {
-        StickerView(deleteSticker: {_ in ()}, sticker: UIImage(systemName: "questionmark")!, id: UUID())
+        StickerView(deleteSticker: {_ in ()}, moveSticker: {_,_ in ()}, sticker: UIImage(systemName: "questionmark")!)
     }
 }

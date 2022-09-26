@@ -1,5 +1,5 @@
 //
-//  StickerView2.swift
+//  StickerView.swift
 //  StickerPaste
 //
 //  Created by Charel Felten on 25/09/2022.
@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct StickerView2: View {
+struct StickerView: View {
     
     @State var previousScale: CGFloat = 1
     @State var newScale: CGFloat = 1
@@ -110,8 +110,8 @@ enum ZPosition {
     case front
 }
 
-struct StickerView2_Previews: PreviewProvider {
+struct StickerView_Previews: PreviewProvider {
     static var previews: some View {
-        StickerView2(deleteSticker: {_ in ()}, sticker: UIImage(systemName: "questionmark")!)
+        StickerView(deleteSticker: {_ in ()}, sticker: UIImage(systemName: "questionmark")!)
     }
 }

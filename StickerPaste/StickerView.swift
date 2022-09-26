@@ -9,14 +9,6 @@ import SwiftUI
 
 struct StickerView: View, Hashable, Equatable {
     
-    static func == (lhs: StickerView, rhs: StickerView) -> Bool {
-        return lhs.id == rhs.id
-    }
-    
-    public func hash(into hasher: inout Hasher) {
-        return hasher.combine(id)
-    }
-    
     @State var previousScale: CGFloat = 1
     @State var newScale: CGFloat = 1
     @State var previousAngle: Angle = Angle(degrees: 0.0)
@@ -24,6 +16,31 @@ struct StickerView: View, Hashable, Equatable {
     @State var previousPosition: CGPoint = CGPoint(x: 300, y: 300)
     @State var newPosition: CGPoint = CGPoint(x: 300, y: 300)
     @State var positionDifference: CGPoint = CGPoint(x: 0, y: 0)
+    @State var zIndex: Double = 0
+    
+    var deleteSticker: (StickerView) -> Void
+    var moveSticker: (StickerView, ZIndexMove) -> Void
+    var sticker: UIImage
+    var width: CGFloat
+    var height: CGFloat
+    var id: UUID
+    
+    init(deleteSticker: @escaping (StickerView) -> Void, moveSticker: @escaping (StickerView, ZIndexMove) -> Void, sticker: UIImage) {
+        self.sticker = sticker
+        self.width = sticker.size.width
+        self.height = sticker.size.height
+        self.deleteSticker = deleteSticker
+        self.moveSticker = moveSticker
+        self.id = UUID()
+    }
+    
+    static func == (lhs: StickerView, rhs: StickerView) -> Bool {
+        return lhs.id == rhs.id
+    }
+    
+    public func hash(into hasher: inout Hasher) {
+        return hasher.combine(id)
+    }
     
     var magnificationGesture: some Gesture {
         MagnificationGesture()
@@ -58,23 +75,6 @@ struct StickerView: View, Hashable, Equatable {
             }
     }
     
-    var deleteSticker: (StickerView) -> Void
-    var moveSticker: (StickerView, ZIndexMove) -> Void
-    var sticker: UIImage
-    var width: CGFloat
-    var height: CGFloat
-    var id: UUID
-    @State var zIndex: Double = 0
-    
-    init(deleteSticker: @escaping (StickerView) -> Void, moveSticker: @escaping (StickerView, ZIndexMove) -> Void, sticker: UIImage) {
-        self.sticker = sticker
-        self.width = sticker.size.width
-        self.height = sticker.size.width
-        self.deleteSticker = deleteSticker
-        self.moveSticker = moveSticker
-        self.id = UUID()
-    }
-    
     var mainMenu: some View {
         Group {
             Button {
@@ -96,13 +96,15 @@ struct StickerView: View, Hashable, Equatable {
     }
     
     var body: some View {
-        ZStack {
-            Rectangle()
-                .fill(Color.clear)
-            Image(uiImage: sticker)
-                .resizable()
-            Text("\(zIndex)").foregroundColor(Color.red)
-        }
+//        ZStack {
+//            Rectangle()
+//                .fill(Color.clear)
+//            Image(uiImage: sticker)
+//                .resizable()
+//            Text("\(zIndex)").foregroundColor(Color.red)
+//        }
+        Image(uiImage: sticker)
+        .resizable()
         .frame(width: self.width, height: self.height, alignment: .center)
         .rotationEffect(newAngle)  // needs to be before scaleEffect
         .scaleEffect(newScale)

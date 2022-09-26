@@ -11,6 +11,7 @@ struct ContentView: View {
     
     @State var backgroundColor: Color = Color.white
     @State var stickerViews: [StickerView] = []
+    @State var viewSize: CGSize = CGSize(width: 0, height: 0)
     
     func pasteSticker() {
         let image = UIPasteboard.general.image ?? UIImage(named: "BaseImage") ?? UIImage(systemName: "questionmark")!
@@ -29,54 +30,12 @@ struct ContentView: View {
     }
     
     func moveSticker(_ stickerView: StickerView, to zIndexMove: ZIndexMove) {
-    }
-//        stickerView.zIndex += 1
-        
-//        print("stickerview argument \(stickerView.zIndex)")
-        
-//        if let index = stickerViews.firstIndex(of: stickerView) {
-////            print("stickerviews index \(stickerViews[index].zIndex)")
-//            stickerViews[index].zIndex += 1
-////            print("stickerviews index after \(stickerViews[index].zIndex)")
-//
-//            var sV = stickerViews[index]
-//            sV.zIndex += 1
-//            stickerViews[index] = sV
-//
-//            print(sV.zIndex)
-//        }
-//
-////        findElements(for: stickerView, in: stickerViews)
-//
-//        for sv in stickerViews {
-//            print("sv index \(sv.zIndex)")
-//        }
-//
-//    }
-    
-    
-    private func findElements(for tsv: StickerView, in svs: [StickerView]) {
-        for sv in svs.sorted(by: {sv1, sv2 in return sv1.zIndex > sv2.zIndex}) {
-            print(sv.zIndex)
-        }
+        // not implemented
     }
     
     func saveCollage() {
-        let controller = UIHostingController(rootView: collageView)
-        let view = controller.view
-        view?.backgroundColor = .clear
-        let renderer = UIGraphicsImageRenderer(size: viewSize)
-//        view?.bounds = CGRect(origin: .zero, size: viewSize)
-        view?.bounds = CGRect(x: viewSize.width/2, y: viewSize.height/2, width: viewSize.width, height: viewSize.height)
-//        view?.boudns = CGRect(origin: ., size: <#T##CGSize#>)
-        var image = renderer.image { _ in
-//            view?.snapshotView(afterScreenUpdates: true)
-            view?.drawHierarchy(in: controller.view.bounds, afterScreenUpdates: true)
-        }
-        UIImageWriteToSavedPhotosAlbum(image, nil, nil, nil)
+        // not implemented
     }
-    
-    
     
     var mainMenu: some View {
         Group {
@@ -90,11 +49,11 @@ struct ContentView: View {
             } label: {
                 Label("Clear Collage", systemImage: "eraser")
             }
-            Button {
-                saveCollage()
-            } label: {
-                Label("Save Collage", systemImage: "square.and.arrow.down.on.square")
-            }
+//            Button {
+//                saveCollage()
+//            } label: {
+//                Label("Save Collage", systemImage: "square.and.arrow.down.on.square")
+//            }
             Menu("Background Color") {
                 Picker(selection: $backgroundColor, label: Label("Background Color", systemImage: "photo")) {
                     Text("White").tag(Color.white)
@@ -108,23 +67,13 @@ struct ContentView: View {
         }
     }
     
-    @State var viewSize: CGSize = CGSize(width: 0, height: 0)
-    
     var collageView: some View {
         ZStack {
             backgroundColor.edgesIgnoringSafeArea(.all)
             ForEach(stickerViews, id: \.self) { stickerView in
                 stickerView
             }
-            GeometryReader { geo in
-                
-            }
         }
-//        .readSize { newSize in
-//          print("The new child size is: \(newSize)")
-//            viewSize = newSize
-//        }
-        .coordinateSpace(name: "collageCoordinateSpace")
     }
     
     var body: some View {
@@ -146,24 +95,6 @@ struct ContentView: View {
             }
         }
     }
-}
-
-struct SizePreferenceKey: PreferenceKey {
-    static var defaultValue: CGSize = .zero
-    static func reduce(value: inout CGSize, nextValue: () -> CGSize) {}
-}
-
-extension View {
-  func readSize(onChange: @escaping (CGSize) -> Void) -> some View {
-    background(
-      GeometryReader { geometryProxy in
-        Color.clear
-          .preference(key: SizePreferenceKey.self, value: geometryProxy.size)
-//          geometryProxy.origin
-      }
-    )
-    .onPreferenceChange(SizePreferenceKey.self, perform: onChange)
-  }
 }
 
 struct ContentView_Previews: PreviewProvider {

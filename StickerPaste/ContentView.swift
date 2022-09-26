@@ -25,7 +25,7 @@ struct ContentView: View {
     }
     
     func saveCollage() {
-        let image = self.body.snapshot()
+        let image = collageView.snapshot(viewSize: viewSize)
         UIImageWriteToSavedPhotosAlbum(image, nil, nil, nil)
     }
     
@@ -68,14 +68,24 @@ struct ContentView: View {
         }
     }
     
+    @State var viewSize: CGSize = CGSize(width: 0, height: 0)
+    
+    var collageView: some View {
+        ZStack {
+            backgroundColor.edgesIgnoringSafeArea(.all)
+            ForEach(stickers, id: \.self) { sticker in
+                StickerView(deleteSticker: deleteSticker, sticker: sticker)
+            }
+        }
+        .readSize { newSize in
+          print("The new child size is: \(newSize)")
+            viewSize = newSize
+        }
+    }
+    
     var body: some View {
         NavigationView() {
-            ZStack {
-                backgroundColor.edgesIgnoringSafeArea(.all)
-                ForEach(stickers, id: \.self) { sticker in
-                    StickerView(deleteSticker: deleteSticker, sticker: sticker)
-                }
-            }
+            collageView
             .toolbar {
                 ToolbarItem(placement: .primaryAction) {
                     Menu(content: {
@@ -94,13 +104,15 @@ struct ContentView: View {
 
 extension View {
     // https://www.hackingwithswift.com/quick-start/swiftui/how-to-convert-a-swiftui-view-to-an-image
-    func snapshot() -> UIImage {
+    func snapshot(viewSize: CGSize) -> UIImage {
         let controller = UIHostingController(rootView: self)
         let view = controller.view
 
-        let targetSize = controller.view.intrinsicContentSize
-        view?.bounds = CGRect(origin: .zero, size: targetSize)
-        view?.backgroundColor = .clear
+//        let targetSize = controller.view.intrinsicContentSize
+        view?.bounds = CGRect(origin: .zero, size: viewSize)
+//        view?.backgroundColor = .clear
+        
+        let targetSize = viewSize
 
         let renderer = UIGraphicsImageRenderer(size: targetSize)
 
@@ -108,6 +120,23 @@ extension View {
             view?.drawHierarchy(in: controller.view.bounds, afterScreenUpdates: true)
         }
     }
+}
+
+struct SizePreferenceKey: PreferenceKey {
+    static var defaultValue: CGSize = .zero
+    static func reduce(value: inout CGSize, nextValue: () -> CGSize) {}
+}
+
+extension View {
+  func readSize(onChange: @escaping (CGSize) -> Void) -> some View {
+    background(
+      GeometryReader { geometryProxy in
+        Color.clear
+          .preference(key: SizePreferenceKey.self, value: geometryProxy.size)
+      }
+    )
+    .onPreferenceChange(SizePreferenceKey.self, perform: onChange)
+  }
 }
 
 struct ContentView_Previews: PreviewProvider {

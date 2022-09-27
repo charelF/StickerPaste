@@ -7,6 +7,11 @@
 
 import SwiftUI
 
+enum StickerType {
+    case textSticker
+    case imageSticker
+}
+
 struct StickerView: View, Hashable, Equatable {
     
     @State var previousScale: CGFloat = 1
@@ -17,6 +22,8 @@ struct StickerView: View, Hashable, Equatable {
     @State var newPosition: CGPoint = CGPoint(x: 300, y: 300)
     @State var positionDifference: CGPoint = CGPoint(x: 0, y: 0)
     @State var zIndex: Double = 0
+    @State var stickerText: String = ""
+    @FocusState var textFieldIsFocused: Bool
     
     var deleteSticker: (StickerView) -> Void
     var moveSticker: (StickerView, ZIndexMove) -> Void
@@ -24,14 +31,21 @@ struct StickerView: View, Hashable, Equatable {
     var width: CGFloat
     var height: CGFloat
     var id: UUID
+    let stickerType: StickerType
     
-    init(deleteSticker: @escaping (StickerView) -> Void, moveSticker: @escaping (StickerView, ZIndexMove) -> Void, sticker: UIImage) {
+    init(
+        deleteSticker: @escaping (StickerView) -> Void,
+        moveSticker: @escaping (StickerView, ZIndexMove) -> Void,
+        sticker: UIImage,
+        stickerType: StickerType
+    ) {
         self.sticker = sticker
         self.width = sticker.size.width
         self.height = sticker.size.height
         self.deleteSticker = deleteSticker
         self.moveSticker = moveSticker
         self.id = UUID()
+        self.stickerType = stickerType
     }
     
     static func == (lhs: StickerView, rhs: StickerView) -> Bool {
@@ -95,16 +109,38 @@ struct StickerView: View, Hashable, Equatable {
         }
     }
     
-    var body: some View {
-//        ZStack {
-//            Rectangle()
-//                .fill(Color.clear)
-//            Image(uiImage: sticker)
-//                .resizable()
-//            Text("\(zIndex)").foregroundColor(Color.red)
-//        }
+    var imageStickerView: some View {
         Image(uiImage: sticker)
-        .resizable()
+            .resizable()
+    }
+    
+    var textStickerView: some View {
+        ZStack {
+            Rectangle().fill(Color.clear)
+            TextField("Enter text", text: $stickerText, prompt: Text("Enter text"), axis: .vertical)
+                .fontWeight(.bold)
+                .focused($textFieldIsFocused)
+                .multilineTextAlignment(.center)
+                .frame(width: 200, height: 100, alignment: .center)
+                .onTapGesture {
+                    textFieldIsFocused.toggle()
+                }
+        }
+        .onTapGesture {
+            textFieldIsFocused.toggle()
+        }
+            
+    }
+    
+    var body: some View {
+        HStack {
+            switch stickerType {
+            case .textSticker:
+                textStickerView
+            case .imageSticker:
+                imageStickerView
+            }
+        }
         .frame(width: self.width, height: self.height, alignment: .center)
         .rotationEffect(newAngle)  // needs to be before scaleEffect
         .scaleEffect(newScale)
@@ -128,6 +164,6 @@ enum ZIndexMove {
 
 struct StickerView_Previews: PreviewProvider {
     static var previews: some View {
-        StickerView(deleteSticker: {_ in ()}, moveSticker: {_,_ in ()}, sticker: UIImage(systemName: "questionmark")!)
+        StickerView(deleteSticker: {_ in ()}, moveSticker: {_,_ in ()}, sticker: UIImage(systemName: "questionmark")!, stickerType: .imageSticker)
     }
 }

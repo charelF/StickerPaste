@@ -13,6 +13,7 @@
 		A2AC7FB228E0C2A000C0300C /* SampleGestureView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2AC7FB128E0C29F00C0300C /* SampleGestureView.swift */; };
 		A2AC7FB428E0F69600C0300C /* StickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2AC7FB328E0F69600C0300C /* StickerView.swift */; };
 		A2AC7FB828E0FCCE00C0300C /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2AC7FB728E0FCCE00C0300C /* ContentView.swift */; };
+		A2AC7FBA28E1F28400C0300C /* SheetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2AC7FB928E1F28400C0300C /* SheetView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -23,6 +24,7 @@
 		A2AC7FB128E0C29F00C0300C /* SampleGestureView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SampleGestureView.swift; sourceTree = "<group>"; };
 		A2AC7FB328E0F69600C0300C /* StickerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StickerView.swift; sourceTree = "<group>"; };
 		A2AC7FB728E0FCCE00C0300C /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		A2AC7FB928E1F28400C0300C /* SheetView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SheetView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -57,6 +59,7 @@
 			children = (
 				A272139E28DF57580001024E /* StickerPasteApp.swift */,
 				A2AC7FB728E0FCCE00C0300C /* ContentView.swift */,
+				A2AC7FB928E1F28400C0300C /* SheetView.swift */,
 				A2AC7FB128E0C29F00C0300C /* SampleGestureView.swift */,
 				A2AC7FB328E0F69600C0300C /* StickerView.swift */,
 				A27213A228DF575A0001024E /* Assets.xcassets */,
@@ -145,6 +148,7 @@
 			files = (
 				A2AC7FB228E0C2A000C0300C /* SampleGestureView.swift in Sources */,
 				A272139F28DF57580001024E /* StickerPasteApp.swift in Sources */,
+				A2AC7FBA28E1F28400C0300C /* SheetView.swift in Sources */,
 				A2AC7FB828E0FCCE00C0300C /* ContentView.swift in Sources */,
 				A2AC7FB428E0F69600C0300C /* StickerView.swift in Sources */,
 			);

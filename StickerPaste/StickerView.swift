@@ -20,7 +20,9 @@ struct StickerView: View, Hashable, Equatable {
     @State var newAngle: Angle = Angle(degrees: 0.0)
     @State var previousPosition: CGPoint = CGPoint(x: 300, y: 300)
     @State var newPosition: CGPoint = CGPoint(x: 300, y: 300)
+    @State var aboveKeyboardPosition: CGPoint = CGPoint(x: 100, y: 100)
     @State var positionDifference: CGPoint = CGPoint(x: 0, y: 0)
+    @State var isTaped: Bool = false
     @State var zIndex: Double = 0
     @State var stickerText: String = ""
     
@@ -114,24 +116,31 @@ struct StickerView: View, Hashable, Equatable {
     var imageStickerView: some View {
         Image(uiImage: sticker)
             .resizable()
+            .frame(width: self.width, height: self.height, alignment: .center)
+    }
+    
+    func doOnTapGesture() {
+        textFieldIsFocused.toggle()
+//        if textFieldIsFocused {
+//            self.previousPosition = self.newPosition
+//            self.newPosition = self.aboveKeyboardPosition
+//        } else {
+//            self.newPosition = self.previousPosition
+//        }
     }
     
     var textStickerView: some View {
         ZStack {
-            Rectangle().fill(Color.clear)
-            TextField("Enter text", text: $stickerText, prompt: Text("Enter text"), axis: .vertical)
-                .foregroundColor((colorScheme == .dark) ? Color.white : Color.black)
+            TextField("enter text", text: $stickerText, axis: .vertical)
+                .font(.largeTitle)
                 .fontWeight(.bold)
-                .focused($textFieldIsFocused)
                 .multilineTextAlignment(.center)
-                .frame(width: 200, height: 100, alignment: .center)
-                .onTapGesture {
-                    textFieldIsFocused.toggle()
-                }
+                .foregroundColor((colorScheme == .dark) ? Color.white : Color.black)
+                .focused($textFieldIsFocused)
+                .onTapGesture { doOnTapGesture() }
+                .padding()
         }
-        .onTapGesture {
-            textFieldIsFocused.toggle()
-        }
+        .onTapGesture { doOnTapGesture() }
             
     }
     
@@ -144,7 +153,6 @@ struct StickerView: View, Hashable, Equatable {
                 imageStickerView
             }
         }
-        .frame(width: self.width, height: self.height, alignment: .center)
         .rotationEffect(newAngle)  // needs to be before scaleEffect
         .scaleEffect(newScale)
         .position(newPosition)

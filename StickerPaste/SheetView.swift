@@ -5,16 +5,6 @@
 //  Created by Charel Felten on 26/09/2022.
 //
 
-let description = """
-StickerPaste is a simple collage app which supports the new iOS 16 stickers. To copy a sticker, go to the Photos app, find a photo with a supported subject (such as a Person, animal, food or distinctive object) and long press it to copy it. Alternatively, you can also copy the whole Photo, or copy a sticker sent to you in Messages or another app.
-
-Head over to StickerPaste, and long press the background or press the + button in the top right corner to paste your sticker. You can paste multiple stickers, move them, rotate them, scale them and assemble your collage. You can also add text to your collage. Once you are ready to share your work, take a Screenshot, crop the collage to your desired dimension, additionally add more text using the Screenshot tool and share your work with your friends and family!
-
-StickerPaste is intentionally minimal in design and features to let users focus on their creativity and to serve as a proof of concept of what can be done with the new iOS 16 stickers. Future updates may include features such as advanced sticker modifications (background, outline, …), improved collage sharing, more extensive text editing and different sticker types.
-
-The release schedule and content of future updates depends on the reception of the app. Please consider purchasing the Pro version if you like to support my work. (and want to use more stickers!)
-""".components(separatedBy: "\n")
-
 import SwiftUI
 
 struct SheetView: View {
@@ -22,6 +12,16 @@ struct SheetView: View {
     @Environment(\.dismiss) var dismiss
     @Environment(\.colorScheme) var colorScheme
     @StateObject var storeManager: StoreManager
+    
+    let description = """
+    StickerPaste is a simple collage app which supports the new iOS 16 stickers. To copy a sticker, go to the Photos app, find a photo with a supported subject (such as a Person, animal, food or distinctive object) and long press it to copy it. Alternatively, you can also copy the whole Photo, or copy a sticker sent to you in Messages or another app.
+
+    Head over to StickerPaste, and long press the background or press the + button in the top right corner to paste your sticker. You can paste multiple stickers, move them, rotate them, scale them and assemble your collage. You can also add text to your collage. Once you are ready to share your work, take a Screenshot, crop the collage to your desired dimension, additionally add more text using the Screenshot tool and share your work with your friends and family!
+
+    StickerPaste is intentionally minimal in design and features to let users focus on their creativity and to serve as a proof of concept of what can be done with the new iOS 16 stickers. Future updates may include features such as advanced sticker modifications (background, outline, …), improved collage sharing, more extensive text editing and different sticker types.
+
+    The release schedule and content of future updates depends on the reception of the app. Please consider purchasing the Pro version if you like to support my work. (and want to use more stickers!)
+    """.components(separatedBy: "\n")
     
     var body: some View {
         
@@ -45,7 +45,7 @@ struct SheetView: View {
                         }
                     }
                     .padding(.bottom)
-                        
+                    
                     ZStack {
                         Color.yellow.opacity(0.05)
                             .cornerRadius(20)
@@ -54,12 +54,12 @@ struct SheetView: View {
                                     .stroke(Color.yellow.opacity(0.5), lineWidth: 2)
                             )
                             .shadow(color: Color.yellow.opacity(1), radius: 20)
-                            
+                        
                         VStack {
                             Text("✨ StickerPaste Pro ✨").font(.title2).fontWeight(.bold)
                                 .frame(maxWidth: .infinity, alignment: .leading)
                                 .padding(.bottom, 5)
-                            Text("The Pro version allows to paste more than 8 stickers and supports the developer")
+                            Text("The Pro version allows to paste more than 5 stickers and supports the developer")
                                 .frame(maxWidth: .infinity, alignment: .leading)
                             
                             if let product = storeManager.myProducts.first {
@@ -76,7 +76,7 @@ struct SheetView: View {
                                 }
                             }
                             
-                            Button("Restore purchases") {
+                            Button("Restore purchase") {
                                 storeManager.restoreProducts()
                             }
                         }
@@ -93,9 +93,15 @@ struct SheetView: View {
                     Button("Close") {
                         dismiss()
                     }
+                    .padding()
+                    
+                    
                 }
                 .padding()
+                
+                
             }
+            
         }
     }
 }

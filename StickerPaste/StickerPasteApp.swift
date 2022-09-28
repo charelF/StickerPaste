@@ -24,6 +24,7 @@ struct StickerPasteApp: App {
                     SKPaymentQueue.default().add(storeManager)
                     storeManager.getProducts(productIDs: productIDs)
                 })
+//            SampleSaveView()
         }
     }
 }

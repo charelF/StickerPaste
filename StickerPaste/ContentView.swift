@@ -13,12 +13,16 @@ struct ContentView: View {
     @State var stickerViews: [StickerView] = []
     @State var viewSize: CGSize = CGSize(width: 0, height: 0)
     @State var showingSheet = false
+    @State var takingScreenshot = false
     
     var uiColor: Color { (backgroundColor == Color.black) ? Color.white : Color.black }
     var uiColorScheme: ColorScheme { (backgroundColor == Color.black) ? ColorScheme.dark : ColorScheme.light }
     
     // In-App purchases handled by StoreManager
     @StateObject var storeManager: StoreManager
+    
+    // saving the view using workaround from https://dev.to/gualtierofr/take-screenshots-of-swiftui-views-2h8n
+    @State var screenshotMaker: ScreenshotMaker?
     
     func pasteSticker(stickerType: StickerType) {
         var isPro: Bool = false
@@ -50,7 +54,19 @@ struct ContentView: View {
     }
     
     func saveCollage() {
-        // not implemented
+        Task {
+            takingScreenshot = true
+            try? await Task.sleep(nanoseconds: 300_000_000)
+            
+            if let screenshotMaker {
+                if let image = screenshotMaker.screenshot() {
+                    print("save screenshot")
+                    UIImageWriteToSavedPhotosAlbum(image, nil, nil, nil)
+                }
+            }
+            
+            takingScreenshot = false
+        }
     }
     
     var mainMenu: some View {
@@ -63,18 +79,18 @@ struct ContentView: View {
             Button {
                 pasteSticker(stickerType: .textSticker)
             } label: {
-                Label("Enter text", systemImage: "character.cursor.ibeam")
+                Label("Enter Text", systemImage: "character.cursor.ibeam")
             }
             Button {
                 clearCollage()
             } label: {
                 Label("Clear Collage", systemImage: "eraser")
             }
-//            Button {
-//                saveCollage()
-//            } label: {
-//                Label("Save Collage", systemImage: "square.and.arrow.down.on.square")
-//            }
+            Button {
+                saveCollage()
+            } label: {
+                Label("Save Collage", systemImage: "square.and.arrow.down.on.square")
+            }
             Menu("Background Color") {
                 Picker(selection: $backgroundColor, label: Label("Background Color", systemImage: "photo")) {
                     Text("White").tag(Color.white)
@@ -107,15 +123,25 @@ struct ContentView: View {
             collageView
             .toolbar {
                 ToolbarItem(placement: .primaryAction) {
-                    Menu(content: { mainMenu }, label: {
-                        Label("Add", systemImage: "plus").foregroundColor(uiColor)
-                    })
+                    if !takingScreenshot {
+                        Menu(content: { mainMenu }, label: {
+                            Label("Add", systemImage: "plus").foregroundColor(uiColor)
+                        })
+                    }
                 }
             }
             .contextMenu { mainMenu }
             .sheet(isPresented: $showingSheet) { SheetView(storeManager: storeManager) }
         }
         .preferredColorScheme(uiColorScheme)
+        .screenshotView { screenshotMaker in
+            self.screenshotMaker = screenshotMaker
+        }
+        .onTapGesture {
+            for sv in stickerViews {
+                sv.textFieldIsFocused = false
+            }
+        }
     }
 }
 

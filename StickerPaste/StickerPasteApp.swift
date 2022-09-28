@@ -6,12 +6,24 @@
 //
 
 import SwiftUI
+import StoreKit
 
 @main
 struct StickerPasteApp: App {
+    
+    @StateObject var storeManager = StoreManager()
+    
+    let productIDs = [
+            "lu.cfx.StickerPaste.IAP.proversion"
+        ]
+    
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            ContentView(storeManager: storeManager)
+                .onAppear(perform: {
+                    SKPaymentQueue.default().add(storeManager)
+                    storeManager.getProducts(productIDs: productIDs)
+                })
         }
     }
 }

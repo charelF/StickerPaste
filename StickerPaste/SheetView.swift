@@ -18,8 +18,10 @@ The release schedule and content of future updates depends on the reception of t
 import SwiftUI
 
 struct SheetView: View {
+    
     @Environment(\.dismiss) var dismiss
     @Environment(\.colorScheme) var colorScheme
+    @StateObject var storeManager: StoreManager
     
     var body: some View {
         
@@ -43,41 +45,53 @@ struct SheetView: View {
                         }
                     }
                     .padding(.bottom)
-                    
+                        
                     ZStack {
-                        Color.yellow.opacity( (colorScheme == .dark) ? 0.15 : 0.05)
+                        Color.yellow.opacity(0.05)
                             .cornerRadius(20)
                             .overlay(
                                 RoundedRectangle(cornerRadius: 20)
                                     .stroke(Color.yellow.opacity(0.5), lineWidth: 2)
                             )
                             .shadow(color: Color.yellow.opacity(1), radius: 20)
+                            
                         VStack {
-                            Text("✨StickerPaste Pro ✨").font(.title2).fontWeight(.bold)
+                            Text("✨ StickerPaste Pro ✨").font(.title2).fontWeight(.bold)
                                 .frame(maxWidth: .infinity, alignment: .leading)
                                 .padding(.bottom, 5)
-                            Text("The Pro version allows to paste more than 8 stickers and supports the developer.")
+                            Text("The Pro version allows to paste more than 8 stickers and supports the developer")
                                 .frame(maxWidth: .infinity, alignment: .leading)
                             
-                            Button("Buy Pro - 1.99$") {
-                                // not implemented
+                            if let product = storeManager.myProducts.first {
+                                if UserDefaults.standard.bool(forKey: product.productIdentifier) {
+                                    Text("Purchased - Thank you!")
+                                        .foregroundColor(.green)
+                                        .padding(6)
+                                } else {
+                                    Button("Buy for \(product.price)") {
+                                        print("clicked buy button")
+                                        storeManager.purchaseProduct(product: product)
+                                    }
+                                    .buttonStyle(.bordered)
+                                }
                             }
-                            .buttonStyle(.bordered)
                             
                             Button("Restore purchases") {
-                                // not implemented
+                                storeManager.restoreProducts()
                             }
                         }
                         .padding()
                     }
                     .padding(.bottom)
                     
-                    
-                    
                     ForEach(description, id: \.self) { substring in
                         Text(substring)
                             .frame(maxWidth: .infinity, alignment: .leading)
                             .padding(.bottom, 5)
+                    }
+                    
+                    Button("Close") {
+                        dismiss()
                     }
                 }
                 .padding()
@@ -88,6 +102,6 @@ struct SheetView: View {
 
 struct SheetView_Previews: PreviewProvider {
     static var previews: some View {
-        SheetView()
+        SheetView(storeManager: StoreManager())
     }
 }

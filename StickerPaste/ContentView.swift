@@ -14,9 +14,19 @@ struct ContentView: View {
     @State var viewSize: CGSize = CGSize(width: 0, height: 0)
     @State var showingSheet = false
     
+    var uiColor: Color { (backgroundColor == Color.black) ? Color.white : Color.black }
+    var uiColorScheme: ColorScheme { (backgroundColor == Color.black) ? ColorScheme.dark : ColorScheme.light }
+    
+    // In-App purchases handled by StoreManager
+    @StateObject var storeManager: StoreManager
+    
     func pasteSticker(stickerType: StickerType) {
-        guard stickerViews.count <= 8 else {
-            // TODO: check if user is pro
+        var isPro: Bool = false
+        if let product = storeManager.myProducts.first {
+            isPro = UserDefaults.standard.bool(forKey: product.productIdentifier)
+        }
+        guard (stickerViews.count <= 8) || isPro else {
+            // user not allowed to post anymore stickers
             showingSheet.toggle()
             return
         }
@@ -92,22 +102,18 @@ struct ContentView: View {
         }
     }
     
-    var uiColor: Color { (backgroundColor == Color.black) ? Color.white : Color.black }
-    
-    var uiColorScheme: ColorScheme { (backgroundColor == Color.black) ? ColorScheme.dark : ColorScheme.light }
-    
     var body: some View {
         NavigationView() {
             collageView
             .toolbar {
                 ToolbarItem(placement: .primaryAction) {
                     Menu(content: { mainMenu }, label: {
-                        Label("Add", systemImage: "plus.circle").foregroundColor(uiColor)
+                        Label("Add", systemImage: "plus").foregroundColor(uiColor)
                     })
                 }
             }
             .contextMenu { mainMenu }
-            .sheet(isPresented: $showingSheet) { SheetView() }
+            .sheet(isPresented: $showingSheet) { SheetView(storeManager: storeManager) }
         }
         .preferredColorScheme(uiColorScheme)
     }
@@ -115,6 +121,6 @@ struct ContentView: View {
 
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
-        ContentView()
+        ContentView(storeManager: StoreManager())
     }
 }

@@ -23,7 +23,9 @@ struct StickerView: View, Hashable, Equatable {
     @State var positionDifference: CGPoint = CGPoint(x: 0, y: 0)
     @State var zIndex: Double = 0
     @State var stickerText: String = ""
+    
     @FocusState var textFieldIsFocused: Bool
+    @Environment(\.colorScheme) var colorScheme
     
     var deleteSticker: (StickerView) -> Void
     var moveSticker: (StickerView, ZIndexMove) -> Void
@@ -118,6 +120,7 @@ struct StickerView: View, Hashable, Equatable {
         ZStack {
             Rectangle().fill(Color.clear)
             TextField("Enter text", text: $stickerText, prompt: Text("Enter text"), axis: .vertical)
+                .foregroundColor((colorScheme == .dark) ? Color.white : Color.black)
                 .fontWeight(.bold)
                 .focused($textFieldIsFocused)
                 .multilineTextAlignment(.center)

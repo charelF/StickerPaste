@@ -41,8 +41,8 @@ struct StickerView: View, Hashable, Equatable {
         stickerType: StickerType
     ) {
         self.sticker = sticker
-        self.width = sticker.size.width
-        self.height = sticker.size.height
+        self.width = sticker.size.width / 3
+        self.height = sticker.size.height / 3
         self.deleteSticker = deleteSticker
         self.id = UUID()
         self.stickerType = stickerType

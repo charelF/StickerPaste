@@ -109,7 +109,7 @@ struct ContentView: View {
     }
     
     var body: some View {
-        NavigationView() {
+        NavigationStack() {
             collageView
                 .toolbar {
                     ToolbarItem(placement: .primaryAction) {

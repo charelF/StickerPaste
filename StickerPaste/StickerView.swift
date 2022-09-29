@@ -18,15 +18,14 @@ struct StickerView: View, Hashable, Equatable {
     @State var newScale: CGFloat = 1
     @State var previousAngle: Angle = Angle(degrees: 0.0)
     @State var newAngle: Angle = Angle(degrees: 0.0)
-    @State var previousPosition: CGPoint = CGPoint(x: 300, y: 300)
-    @State var newPosition: CGPoint = CGPoint(x: 300, y: 300)
-    @State var aboveKeyboardPosition: CGPoint = CGPoint(x: 100, y: 100)
+    @State var previousPosition: CGPoint = CGPoint(x: 150, y: 300)
+    @State var newPosition: CGPoint = CGPoint(x: 150, y: 300)
     @State var positionDifference: CGPoint = CGPoint(x: 0, y: 0)
     @State var isTaped: Bool = false
     @State var zIndex: Double = 0
     @State var stickerText: String = ""
+    @State var tempStickerText: String = ""
     
-    @FocusState var textFieldIsFocused: Bool
     @Environment(\.colorScheme) var colorScheme
     
     var deleteSticker: (StickerView) -> Void
@@ -110,6 +109,13 @@ struct StickerView: View, Hashable, Equatable {
             } label: {
                 Label("Move Sticker Down", systemImage: "arrow.down")
             }
+            if stickerType == .textSticker {
+                Button {
+                    self.isTaped = true
+                } label: {
+                    Label("Edit Text", systemImage: "character.cursor.ibeam")
+                }
+            }
         }
     }
     
@@ -119,29 +125,30 @@ struct StickerView: View, Hashable, Equatable {
             .frame(width: self.width, height: self.height, alignment: .center)
     }
     
-    func doOnTapGesture() {
-        textFieldIsFocused.toggle()
-//        if textFieldIsFocused {
-//            self.previousPosition = self.newPosition
-//            self.newPosition = self.aboveKeyboardPosition
-//        } else {
-//            self.newPosition = self.previousPosition
-//        }
-    }
-    
     var textStickerView: some View {
-        ZStack {
-            TextField("enter text", text: $stickerText, axis: .vertical)
-                .font(.largeTitle)
-                .fontWeight(.bold)
-                .multilineTextAlignment(.center)
-                .foregroundColor((colorScheme == .dark) ? Color.white : Color.black)
-                .focused($textFieldIsFocused)
-                .onTapGesture { doOnTapGesture() }
-                .padding()
-        }
-        .onTapGesture { doOnTapGesture() }
-            
+        Text(stickerText)
+            .font(.largeTitle)
+            .fontWeight(.bold)
+            .multilineTextAlignment(.center)
+            .foregroundColor((colorScheme == .dark) ? Color.white : Color.black)
+            .padding()
+            .onAppear {
+                self.isTaped = true
+            }
+            .alert("Edit Text", isPresented: $isTaped, actions: {
+                TextField("Username", text: $tempStickerText, axis: .vertical)
+                    .foregroundColor(Color.black)
+                Button("Save", action: {
+                    stickerText = tempStickerText
+                    self.isTaped = false
+                })
+                Button("Cancel", role: .cancel, action: {
+                    tempStickerText = stickerText
+                    self.isTaped = false
+                })
+            }, message: {
+                Text("Enter new text.")
+            })
     }
     
     var body: some View {

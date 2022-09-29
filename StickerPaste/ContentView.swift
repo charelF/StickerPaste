@@ -137,11 +137,6 @@ struct ContentView: View {
         .screenshotView { screenshotMaker in
             self.screenshotMaker = screenshotMaker
         }
-        .onTapGesture {
-            for sv in stickerViews {
-                sv.textFieldIsFocused = false
-            }
-        }
     }
 }
 

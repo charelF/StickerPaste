@@ -14,15 +14,11 @@ struct ContentView: View {
     @State var viewSize: CGSize = CGSize(width: 0, height: 0)
     @State var showingSheet = false
     @State var takingScreenshot = false
+    @StateObject var storeManager: StoreManager
+    @State var screenshotMaker: ScreenshotMaker?
     
     var uiColor: Color { (backgroundColor == Color.black) ? Color.white : Color.black }
     var uiColorScheme: ColorScheme { (backgroundColor == Color.black) ? ColorScheme.dark : ColorScheme.light }
-    
-    // In-App purchases handled by StoreManager
-    @StateObject var storeManager: StoreManager
-    
-    // saving the view using workaround from https://dev.to/gualtierofr/take-screenshots-of-swiftui-views-2h8n
-    @State var screenshotMaker: ScreenshotMaker?
     
     func pasteSticker(stickerType: StickerType) {
         var isPro: Bool = false
@@ -31,11 +27,11 @@ struct ContentView: View {
         }
         guard (stickerViews.count <= 8) || isPro else {
             // user not allowed to post anymore stickers
-            showingSheet.toggle()
+            showingSheet = true
             return
         }
         let image = UIPasteboard.general.image ?? UIImage(named: "BaseImage") ?? UIImage(systemName: "questionmark")!
-        let stickerView = StickerView(deleteSticker: deleteSticker, moveSticker: moveSticker, sticker: image, stickerType: stickerType)
+        let stickerView = StickerView(deleteSticker: deleteSticker, sticker: image, stickerType: stickerType)
         stickerViews.append(stickerView)
     }
     
@@ -49,22 +45,16 @@ struct ContentView: View {
         stickerViews = []
     }
     
-    func moveSticker(_ stickerView: StickerView, to zIndexMove: ZIndexMove) {
-        // not implemented
-    }
-    
     func saveCollage() {
         Task {
             takingScreenshot = true
-            try? await Task.sleep(nanoseconds: 300_000_000)
-            
+            try? await Task.sleep(nanoseconds: 200_000_000)
             if let screenshotMaker {
                 if let image = screenshotMaker.screenshot() {
                     print("save screenshot")
                     UIImageWriteToSavedPhotosAlbum(image, nil, nil, nil)
                 }
             }
-            
             takingScreenshot = false
         }
     }
@@ -121,17 +111,17 @@ struct ContentView: View {
     var body: some View {
         NavigationView() {
             collageView
-            .toolbar {
-                ToolbarItem(placement: .primaryAction) {
-                    if !takingScreenshot {
-                        Menu(content: { mainMenu }, label: {
-                            Label("Add", systemImage: "plus").foregroundColor(uiColor)
-                        })
+                .toolbar {
+                    ToolbarItem(placement: .primaryAction) {
+                        if !takingScreenshot {
+                            Menu(content: { mainMenu }, label: {
+                                Label("Add", systemImage: "plus").foregroundColor(uiColor)
+                            })
+                        }
                     }
                 }
-            }
-            .contextMenu { mainMenu }
-            .sheet(isPresented: $showingSheet) { SheetView(storeManager: storeManager) }
+                .contextMenu { mainMenu }
+                .sheet(isPresented: $showingSheet) { SheetView(storeManager: storeManager) }
         }
         .preferredColorScheme(uiColorScheme)
         .screenshotView { screenshotMaker in

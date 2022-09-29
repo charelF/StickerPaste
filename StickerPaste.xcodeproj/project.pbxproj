@@ -12,11 +12,10 @@
 		A27213A628DF575A0001024E /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A27213A528DF575A0001024E /* Preview Assets.xcassets */; };
 		A2919B1D28E49343007D38C8 /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A2919B1C28E49343007D38C8 /* StoreKit.framework */; };
 		A2919B1F28E49375007D38C8 /* StoreManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2919B1E28E49375007D38C8 /* StoreManager.swift */; };
-		A2919B2128E4D8FF007D38C8 /* SampleSaveView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2919B2028E4D8FE007D38C8 /* SampleSaveView.swift */; };
-		A2AC7FB228E0C2A000C0300C /* SampleGestureView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2AC7FB128E0C29F00C0300C /* SampleGestureView.swift */; };
 		A2AC7FB428E0F69600C0300C /* StickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2AC7FB328E0F69600C0300C /* StickerView.swift */; };
 		A2AC7FB828E0FCCE00C0300C /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2AC7FB728E0FCCE00C0300C /* ContentView.swift */; };
 		A2AC7FBA28E1F28400C0300C /* SheetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2AC7FB928E1F28400C0300C /* SheetView.swift */; };
+		A2F5678628E5951A00DA5CB0 /* ViewExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2F5678528E5951A00DA5CB0 /* ViewExtensions.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -26,11 +25,10 @@
 		A27213A528DF575A0001024E /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		A2919B1C28E49343007D38C8 /* StoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = StoreKit.framework; path = System/Library/Frameworks/StoreKit.framework; sourceTree = SDKROOT; };
 		A2919B1E28E49375007D38C8 /* StoreManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StoreManager.swift; sourceTree = "<group>"; };
-		A2919B2028E4D8FE007D38C8 /* SampleSaveView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SampleSaveView.swift; sourceTree = "<group>"; };
-		A2AC7FB128E0C29F00C0300C /* SampleGestureView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SampleGestureView.swift; sourceTree = "<group>"; };
 		A2AC7FB328E0F69600C0300C /* StickerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StickerView.swift; sourceTree = "<group>"; };
 		A2AC7FB728E0FCCE00C0300C /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		A2AC7FB928E1F28400C0300C /* SheetView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SheetView.swift; sourceTree = "<group>"; };
+		A2F5678528E5951A00DA5CB0 /* ViewExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewExtensions.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -68,8 +66,7 @@
 				A272139E28DF57580001024E /* StickerPasteApp.swift */,
 				A2AC7FB728E0FCCE00C0300C /* ContentView.swift */,
 				A2AC7FB928E1F28400C0300C /* SheetView.swift */,
-				A2AC7FB128E0C29F00C0300C /* SampleGestureView.swift */,
-				A2919B2028E4D8FE007D38C8 /* SampleSaveView.swift */,
+				A2F5678528E5951A00DA5CB0 /* ViewExtensions.swift */,
 				A2AC7FB328E0F69600C0300C /* StickerView.swift */,
 				A2919B1E28E49375007D38C8 /* StoreManager.swift */,
 				A27213A228DF575A0001024E /* Assets.xcassets */,
@@ -164,8 +161,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				A2AC7FB228E0C2A000C0300C /* SampleGestureView.swift in Sources */,
-				A2919B2128E4D8FF007D38C8 /* SampleSaveView.swift in Sources */,
+				A2F5678628E5951A00DA5CB0 /* ViewExtensions.swift in Sources */,
 				A272139F28DF57580001024E /* StickerPasteApp.swift in Sources */,
 				A2AC7FBA28E1F28400C0300C /* SheetView.swift in Sources */,
 				A2919B1F28E49375007D38C8 /* StoreManager.swift in Sources */,

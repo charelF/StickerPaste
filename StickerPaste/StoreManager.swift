@@ -3,10 +3,13 @@
 //  StickerPaste
 //
 //  Created by Charel Felten on 28/09/2022.
-//  INSPIRATION: https://blckbirds.com/post/how-to-use-in-app-purchases-in-swiftui-apps/
+//
 
 import Foundation
 import StoreKit
+
+// MARK: Store Manager for IAP
+// Source: https://blckbirds.com/post/how-to-use-in-app-purchases-in-swiftui-apps/
 
 
 class StoreManager: NSObject, ObservableObject, SKProductsRequestDelegate, SKPaymentTransactionObserver {

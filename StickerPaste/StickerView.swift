@@ -29,7 +29,6 @@ struct StickerView: View, Hashable, Equatable {
     @Environment(\.colorScheme) var colorScheme
     
     var deleteSticker: (StickerView) -> Void
-    var moveSticker: (StickerView, ZIndexMove) -> Void
     var sticker: UIImage
     var width: CGFloat
     var height: CGFloat
@@ -38,7 +37,6 @@ struct StickerView: View, Hashable, Equatable {
     
     init(
         deleteSticker: @escaping (StickerView) -> Void,
-        moveSticker: @escaping (StickerView, ZIndexMove) -> Void,
         sticker: UIImage,
         stickerType: StickerType
     ) {
@@ -46,7 +44,6 @@ struct StickerView: View, Hashable, Equatable {
         self.width = sticker.size.width
         self.height = sticker.size.height
         self.deleteSticker = deleteSticker
-        self.moveSticker = moveSticker
         self.id = UUID()
         self.stickerType = stickerType
     }
@@ -136,7 +133,7 @@ struct StickerView: View, Hashable, Equatable {
                 self.isTaped = true
             }
             .alert("Edit Text", isPresented: $isTaped, actions: {
-                TextField("Username", text: $tempStickerText, axis: .vertical)
+                TextField("Text", text: $tempStickerText, axis: .vertical)
                     .foregroundColor(Color.black)
                 Button("Save", action: {
                     stickerText = tempStickerText
@@ -182,6 +179,6 @@ enum ZIndexMove {
 
 struct StickerView_Previews: PreviewProvider {
     static var previews: some View {
-        StickerView(deleteSticker: {_ in ()}, moveSticker: {_,_ in ()}, sticker: UIImage(systemName: "questionmark")!, stickerType: .imageSticker)
+        StickerView(deleteSticker: {_ in ()}, sticker: UIImage(systemName: "questionmark")!, stickerType: .imageSticker)
     }
 }

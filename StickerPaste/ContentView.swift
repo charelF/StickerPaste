@@ -25,8 +25,8 @@ struct ContentView: View {
         if let product = storeManager.myProducts.first {
             isPro = UserDefaults.standard.bool(forKey: product.productIdentifier)
         }
-        guard (stickerViews.count <= 5) || isPro else {
-            // user not allowed to post anymore stickers
+        print("Number of stickers: \(stickerViews.count)")
+        guard (stickerViews.count < 5) || isPro else {
             showingSheet = true
             return
         }
@@ -73,8 +73,14 @@ struct ContentView: View {
         Task {
             if let screenshot = await takeScreenshot() {
                 let activityVC = UIActivityViewController(activityItems: [screenshot], applicationActivities: nil)
-                UIApplication.shared.connectedScenes.flatMap {($0 as? UIWindowScene)?.windows ?? []}.first {$0.isKeyWindow}?.rootViewController?.present(activityVC, animated: true, completion: nil)  // disgusting
-                print("share Screenshot")
+                
+                if UIDevice.current.userInterfaceIdiom == .pad {
+                    // otherwise iPad crashes
+                    let thisViewVC = UIHostingController(rootView: self)
+                    activityVC.popoverPresentationController?.sourceView = thisViewVC.view
+                }
+                
+                UIApplication.shared.connectedScenes.flatMap {($0 as? UIWindowScene)?.windows ?? []}.first {$0.isKeyWindow}?.rootViewController?.present(activityVC, animated: true, completion: nil)
             }
         }
     }
@@ -106,14 +112,6 @@ struct ContentView: View {
             } label: {
                 Label("Share Collage", systemImage: "square.and.arrow.up")
             }
-//            Button {
-//                saveCollage()
-//            } label: {
-//                Label("Save Collage", systemImage: "square.and.arrow.down.on.square")
-//            }
-//            ShareLink(item: GURL()) {
-//                Image(systemName: "")
-//            }
             Menu("Background Color") {
                 Picker(selection: $backgroundColor, label: Label("Background Color", systemImage: "photo")) {
                     Text("White").tag(Color.white)
@@ -122,6 +120,9 @@ struct ContentView: View {
                     Text("Yellow").tag(Color.yellow)
                     Text("Green").tag(Color.green)
                     Text("Blue").tag(Color.blue)
+                    Text("Orange").tag(Color.orange)
+                    Text("Pink").tag(Color.pink)
+                    Text("Purple").tag(Color.purple)
                 }
             }
             Button {

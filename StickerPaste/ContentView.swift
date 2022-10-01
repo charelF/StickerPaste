@@ -25,7 +25,7 @@ struct ContentView: View {
         if let product = storeManager.myProducts.first {
             isPro = UserDefaults.standard.bool(forKey: product.productIdentifier)
         }
-        guard (stickerViews.count <= 8) || isPro else {
+        guard (stickerViews.count <= 5) || isPro else {
             // user not allowed to post anymore stickers
             showingSheet = true
             return
@@ -45,17 +45,37 @@ struct ContentView: View {
         stickerViews = []
     }
     
+    func takeScreenshot() async -> UIImage? {
+        takingScreenshot = true
+        defer {  // no matter how we exit, set taking Screnshot to false
+            takingScreenshot = false
+        }
+        try? await Task.sleep(nanoseconds: 200_000_000)
+        if let screenshotMaker {
+            if let screenshot = screenshotMaker.screenshot() {
+                print("took Screenshot")
+                return screenshot
+            }
+        }
+        return nil
+    }
+    
     func saveCollage() {
         Task {
-            takingScreenshot = true
-            try? await Task.sleep(nanoseconds: 200_000_000)
-            if let screenshotMaker {
-                if let image = screenshotMaker.screenshot() {
-                    print("save screenshot")
-                    UIImageWriteToSavedPhotosAlbum(image, nil, nil, nil)
-                }
+            if let screenshot = await takeScreenshot() {
+                UIImageWriteToSavedPhotosAlbum(screenshot, nil, nil, nil)
+                print("save Screenshot")
             }
-            takingScreenshot = false
+        }
+    }
+    
+    func shareCollage() {
+        Task {
+            if let screenshot = await takeScreenshot() {
+                let activityVC = UIActivityViewController(activityItems: [screenshot], applicationActivities: nil)
+                UIApplication.shared.connectedScenes.flatMap {($0 as? UIWindowScene)?.windows ?? []}.first {$0.isKeyWindow}?.rootViewController?.present(activityVC, animated: true, completion: nil)  // disgusting
+                print("share Screenshot")
+            }
         }
     }
     
@@ -64,7 +84,7 @@ struct ContentView: View {
             Button {
                 pasteSticker(stickerType: .imageSticker)
             } label: {
-                Label("Paste Sticker", systemImage: "doc.on.clipboard")
+                Label("Paste Sticker", systemImage: "clipboard")
             }
             Button {
                 pasteSticker(stickerType: .textSticker)
@@ -81,6 +101,19 @@ struct ContentView: View {
             } label: {
                 Label("Save Collage", systemImage: "square.and.arrow.down.on.square")
             }
+            Button {
+                shareCollage()
+            } label: {
+                Label("Share Collage", systemImage: "square.and.arrow.up")
+            }
+//            Button {
+//                saveCollage()
+//            } label: {
+//                Label("Save Collage", systemImage: "square.and.arrow.down.on.square")
+//            }
+//            ShareLink(item: GURL()) {
+//                Image(systemName: "")
+//            }
             Menu("Background Color") {
                 Picker(selection: $backgroundColor, label: Label("Background Color", systemImage: "photo")) {
                     Text("White").tag(Color.white)

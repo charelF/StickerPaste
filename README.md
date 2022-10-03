@@ -1,14 +1,10 @@
 # StickerPaste
 
-Paste your stickers! 
-<!-- [ available on the App Store](https://apps.apple.com/lu/app/remindme-reminders/id1598734050)! -->
+Paste your stickers! [Available on the App Store](https://apps.apple.com/us/app/stickerpaste/id6443547860)!
 
-<!-- <img src="Shared/Assets.xcassets/AppIcon.appiconset/1024.png" width="100" />
-<img src="Images/b/notes.png" width="400" /> -->
-
-<!-- <a href="https://apps.apple.com/lu/app/remindme-reminders/id1598734050">
-  <img src="Images/remind_me_reminders_1200x628.png" />
-</a> -->
+<a href="https://apps.apple.com/us/app/stickerpaste/id6443547860">
+  <img src="Images/sticker_paste/sticker_paste-1200x628.png" />
+</a>
 
 
 ## Support
